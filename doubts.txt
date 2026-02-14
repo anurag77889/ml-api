@@ -1,6 +1,9 @@
 # If someone sends POST or PUT /health
 # FastAPI wil return 405 method not allowed
 
+# 400 -> Client sent wrong data
+# 500 -> Server failed internally
+
 # FastAPI converts your Python dictionary into JSON
 # before sending it to Uvicorn
 
@@ -33,3 +36,16 @@
 # [[age, salary]] # [] => no.of samples, 
 #                 # age and salary => no.of features
 
+
+# Exposing raw errors could lead to file paths, internal logic
+# stack traces, db structure which attackers love so 
+# trust is secondary, security is primary
+
+# Validation error usually happens before business logic, 
+# often from client side, schema mismatch, 422 or 400 code
+
+# Inference error usually happens inside business logic,
+# from server side, model or feature process fail, 500 code 
+
+# Logs should go to log files, logging services like ELK
+# or centralized log aggregators
