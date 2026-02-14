@@ -1,0 +1,13 @@
+# If someone sends POST or PUT /health
+# FastAPI wil return 405 method not allowed
+
+# FastAPI converts your Python dictionary into JSON
+# before sending it to Uvicorn
+
+# FastAPI = framework logic + serialization
+# Uvicorn = ASGI server (network layer)
+
+# Uvicorn is an ASGI server which listens on a port 8000,
+# accepts HTTP requests, forwards them to FastAPI, sends back
+# FastAPI's response
+
