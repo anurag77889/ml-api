@@ -44,6 +44,13 @@ def predict(input_data: PredictionInput):
 
         prediction = model.predict(features)[0]
 
+        # Insert into DB
+        cursor.execute(
+            "INSERT INTO predictions (age, salary, prediction) VALUES (?, ?, ?)",
+            (input_data.age, input_data.salary, int(prediction))
+        )
+        conn.commit()
+
         return { "prediction": int(prediction) }
     
     except Exception as e:
