@@ -5,6 +5,10 @@ import numpy as np
 
 app = FastAPI()
 
+# Load model once when app starts
+with open("E:\\AI-ML Engineer\\ml-api\\model\\model.pkl", "rb") as f:
+    model = pickle.load(f)
+
 # Data contract
 class PredictionInput(BaseModel):
     age: int
@@ -16,7 +20,12 @@ def health_check():
 
 @app.post("/predict")
 def predict(input_data: PredictionInput):
+
+    # Convert input to model formate
+    features = np.array([[input_data.age, input_data.salary]])
+
+    prediction = model.predict(features)[0]
+
     return {
-        "received_age": input_data.age,
-        "received_salary": input_data.salary
+        "prediction": int(prediction)
     }
