@@ -49,3 +49,17 @@
 
 # Logs should go to log files, logging services like ELK
 # or centralized log aggregators
+
+# ? in SQL is parameterized query which prevents SQL injection
+# and safer than string formatting
+
+# Request -> Validation -> Model Inference -> Store in DB -> Respond
+
+# Client -> FastAPI -> Validation -> ML Model -> SQLite DB -> Response 
+
+# SQLite by default only allows the connection to be used in the same thread it was created in. So if we don't write check same thread is false, it would throw an error 
+
+# Commit = Make the change permanent
+
+# API -> Service -> DB -> Model 
+

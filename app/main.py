@@ -1,63 +1,10 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-import pickle
-import numpy as np 
-import sqlite3
+from fastapi import FastAPI
+from app.api.routes import router
 
 app = FastAPI()
 
-# Load model once when app starts
-with open("E:\\AI-ML Engineer\\ml-api\\model\\model.pkl", "rb") as f:
-    model = pickle.load(f)
-
-# Create SQLite database connection
-conn = sqlite3.connect("predictions.db", check_same_thread=False)
-cursor = conn.cursor()
-
-# Create table if not exists
-cursor.execute("""
-    CREATE TABLE IF NOT EXISTS predictions (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        age INTEGER,
-        salary REAL,
-        prediction INTEGER   
-   )
-""")
-conn.commit()
-
-
-# Data contract
-class PredictionInput(BaseModel):
-    age: int
-    salary: float
+app.include_router(router)
 
 @app.get("/health")
 def health_check():
     return {"Status": "API is running"}
-
-@app.post("/predict")
-def predict(input_data: PredictionInput):
-
-    try:
-        # Convert input to model formate
-        features = np.array([[input_data.age, input_data.salary]])       
-
-        prediction = model.predict(features)[0]
-
-        # Insert into DB
-        cursor.execute(
-            "INSERT INTO predictions (age, salary, prediction) VALUES (?, ?, ?)",
-            (input_data.age, input_data.salary, int(prediction))
-        )
-        conn.commit()
-
-        return { "prediction": int(prediction) }
-    
-    except Exception as e:
-        # Log error (for now just print)
-        print("Prediction error: ", str(e))
-
-        raise HTTPException(
-            status_code=500,
-            detail="Prediction failed. Please try again later."
-        )
