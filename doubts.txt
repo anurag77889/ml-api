@@ -63,3 +63,6 @@
 
 # API -> Service -> DB -> Model 
 
+# DB Per Request
+# A database connection per request and close it after request finishes
+
