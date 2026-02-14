@@ -2,12 +2,29 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import pickle
 import numpy as np 
+import sqlite3
 
 app = FastAPI()
 
 # Load model once when app starts
 with open("E:\\AI-ML Engineer\\ml-api\\model\\model.pkl", "rb") as f:
     model = pickle.load(f)
+
+# Create SQLite database connection
+conn = sqlite3.connect("predictions.db", check_same_thread=False)
+cursor = conn.cursor()
+
+# Create table if not exists
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS predictions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        age INTEGER,
+        salary REAL,
+        prediction INTEGER   
+   )
+""")
+conn.commit()
+
 
 # Data contract
 class PredictionInput(BaseModel):
