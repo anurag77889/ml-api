@@ -11,3 +11,19 @@
 # accepts HTTP requests, forwards them to FastAPI, sends back
 # FastAPI's response
 
+# If data is invalid, then 422 - Unprocessable Entity
+
+# Incoming request 
+# FastAPI parses JSON 
+# Pydantic validates schema
+# If valid -> function runs and ML Inference
+# If invalid -> function never runs 
+
+# without PredictionInput there will be no type validation
+# no required field enforcement, no automatic conversion,
+# which leads to more bugs so USE IT 
+
+# NEVER train model inside request
+
+# App starts -> Load trained model into memory
+# Request -> Use model for inference -> Respond
