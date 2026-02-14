@@ -27,3 +27,9 @@
 
 # App starts -> Load trained model into memory
 # Request -> Use model for inference -> Respond
+
+# we return [[]] because scikit-learn expects 
+# (number_of_samples, number_of_features)
+# [[age, salary]] # [] => no.of samples, 
+#                 # age and salary => no.of features
+
