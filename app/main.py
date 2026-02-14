@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import pickle
 import numpy as np 
@@ -21,11 +21,19 @@ def health_check():
 @app.post("/predict")
 def predict(input_data: PredictionInput):
 
-    # Convert input to model formate
-    features = np.array([[input_data.age, input_data.salary]])
+    try:
+        # Convert input to model formate
+        features = np.array([[input_data.age, input_data.salary]])       
 
-    prediction = model.predict(features)[0]
+        prediction = model.predict(features)[0]
 
-    return {
-        "prediction": int(prediction)
-    }
+        return { "prediction": int(prediction) }
+    
+    except Exception as e:
+        # Log error (for now just print)
+        print("Prediction error: ", str(e))
+
+        raise HTTPException(
+            status_code=500,
+            detail="Prediction failed. Please try again later."
+        )
