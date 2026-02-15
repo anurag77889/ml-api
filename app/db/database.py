@@ -5,6 +5,7 @@ def get_db_connection():
     conn = sqlite3.connect("predictions.db")
     return conn 
 
+# Create the PREDICTIONS table
 def create_table():
     conn = get_db_connection()
     cursor = conn.cursor()      
@@ -15,12 +16,14 @@ def create_table():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             age INTEGER,
             salary REAL,
-            prediction INTEGER   
+            prediction INTEGER,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  
         )
     """)
     conn.commit()
     conn.close()
 
+# Add PREDICTIONS into the database
 def insert_prediction(age, salary, prediction):
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -31,3 +34,16 @@ def insert_prediction(age, salary, prediction):
     )
     conn.commit()
     conn.close()
+
+
+# Get recent PREDICTIONS
+def get_recent_predictions(limit=10):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT age, salary, prediction, created_at FROM predictions ORDER BY DESC LIMIT ?", (limit, ))
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    return rows 
